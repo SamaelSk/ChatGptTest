@@ -1,9 +1,16 @@
 ﻿using ChatGptTest;
-
+using Microsoft.Extensions.Configuration;
 class Program
 {
     static async Task Main()
     {
+        var configuration = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile($"appsettings.json")
+            .Build();
+
+        var settings = configuration.Get<ChatGptSettings>();
+
         while (true)
         {
             Console.Write("Enter your question: ");
@@ -20,7 +27,7 @@ class Program
                 break;
             }
 
-            var response = await OpenAI.SendMessageAsync(userInput);
+            var response = await Utilities.SendMessageAsync(userInput, settings);
 
             Console.WriteLine("ChatGPT: " + response);
         }
